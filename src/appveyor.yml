@@ -8,17 +8,21 @@ branches:
 
 cache: node_modules  # кеширование
 
+environment:
+  access_token:
+    secure: OZg9+VKt3YNP7o50iMe8UYIUu6xmFZtQtcYvaOm08FCzn4OlVRk8ARQXDk8RxJXU
+
 install:
   - yarn  # команда установки зависимостей
 
 build: off  # отключаем встроенную в appveyor систему сборки
 
 build_script:
-  - npm build   # команда сборки
+  - yarn build   # команда сборки
 
-deploy_script:  # скрипт развёртывания
+deploy_script: # скрипт развёртывания
   - git config --global credential.helper store
-  - git config --global user.name AppVeyor
-  - git config --global user.email ci@appveyor.com
-  - echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com" > "$HOME/.git-credentials"
+  - git config --global user.name Nikiteo
+  - git config --global user.email zhigiley.nikita2012@yandex.ru
+  - ps: Set-Content -Path "$HOME\.git-credentials" -Value "https://$($env:access_token):x-oauth-basic@github.com`n" -NoNewline
   - npx push-dir --dir=dist --branch=gh-pages --force --verbose
